@@ -10,6 +10,8 @@ import java.util.Date;
 
 /**
  * @author wwf
+ *
+ * 实体映射类 product_category
  */
 @Entity
 @DynamicUpdate
