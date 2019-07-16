@@ -1,0 +1,29 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /luckymoney
+
+limit:
+  minMoney: 0.1
+  maxMoney: 9999
+  description: 最少要发${limit.minMoney}元, 最多${limit.maxMoney}元
+
+Spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/sell?serverTimezone=UTC
+    username: root
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+#logging:
+#  pattern:
+#    console: "%d - %msg%n"
+#  path: /var/log/tomcat/ -> sping.log mac path
+#  path: D:/var/log/tomcat/ -> sping.log windows path
+#  file: /var/log/tomcat/sell.log -> sell.log mac path
+#  file: D:/var/log/tomcat/sell.log -> sell.log windows path
+#  level:
+#    com.imooc.LoggerTest: debug
