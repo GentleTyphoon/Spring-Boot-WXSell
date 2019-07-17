@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * @author wwf
  *
- * 实体映射类 product_category
+ * 商品分类 实体映射类 product_category
  */
 @Entity
 @DynamicUpdate

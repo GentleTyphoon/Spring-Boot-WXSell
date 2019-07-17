@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * @author wwf
  * @date 2019/7/16 19:34
+ * DAO(Data Access Object) 数据访问对象是一个面向对象的数据库接口
  */
 public interface ProductInfoRepository extends JpaRepository<ProductInfo, String> {
 
