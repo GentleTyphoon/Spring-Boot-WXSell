@@ -38,6 +38,7 @@ public class ProductCategoryRepositoryTest {
         productCategory.setCategoryName("hello spring boot");
         productCategory.setCategoryType(3);
         repository.save(productCategory);*/
+
         ProductCategory productCategory = new ProductCategory("hello world", 6);
         ProductCategory result = repository.save(productCategory);
         Assert.assertNotNull(result);
