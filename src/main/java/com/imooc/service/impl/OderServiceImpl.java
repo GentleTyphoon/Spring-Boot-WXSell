@@ -5,6 +5,8 @@ import com.imooc.dataobject.OrderMaster;
 import com.imooc.dataobject.ProductInfo;
 import com.imooc.dto.CartDTO;
 import com.imooc.dto.OrderDTO;
+import com.imooc.enums.OrderStatusEnum;
+import com.imooc.enums.PayStatusEnum;
 import com.imooc.enums.ResultEnum;
 import com.imooc.exception.SellException;
 import com.imooc.repository.OrderDetailRepository;
@@ -16,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -29,6 +32,7 @@ import java.util.stream.Collectors;
  * @author wwf
  * @date 2019/7/18 21:04
  */
+@Service
 public class OderServiceImpl implements OrderService {
 
     @Autowired
@@ -76,9 +80,9 @@ public class OderServiceImpl implements OrderService {
                     .multiply(new BigDecimal(orderDetail.getProductQuantity())).add(orderAmount);
 
             //订单详情入库 order_detail
+            BeanUtils.copyProperties(productInfo, orderDetail);
             orderDetail.setDetailId(KeyUtil.genUniqueKey());
             orderDetail.setOrderId(orderId);
-            BeanUtils.copyProperties(productInfo, orderDetail);
             orderDetailRepository.save(orderDetail);
 
             //CartDTO cartDTO = new CartDTO(orderDetail.getProductQuantity(), orderDetail.getProductId());
@@ -87,15 +91,17 @@ public class OderServiceImpl implements OrderService {
 
         //3.写入订单数据库 order_master
         OrderMaster orderMaster = new OrderMaster();
+        BeanUtils.copyProperties(orderDTO, orderMaster);
         orderMaster.setOrderId(orderId);
         orderMaster.setOrderAmount(orderAmount);
-        BeanUtils.copyProperties(orderDTO, orderMaster);
+        orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderMaster.setPayStatus(PayStatusEnum.WAIT.getCode());
         orderMasterRepository.save(orderMaster);
 
         //4.扣库存
         //购物车 数据传输对象 list
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map(e ->
-                new CartDTO(e.getProductQuantity(), e.getProductId()))
+                new CartDTO(e.getProductId(), e.getProductQuantity()))
                 .collect(Collectors.toList());
         productService.decreaseStock(cartDTOList);
 
